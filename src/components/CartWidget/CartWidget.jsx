@@ -1,11 +1,13 @@
-import React from 'react'
-// import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-// import { red } from '@mui/material/colors';
+import { useContext } from 'react';
+import { CartContext } from '../../context/CartContext';
 
-export const CartWidget = () => {
-  // return (
-  //   <ShoppingCartIcon sx={{ color: red }} fontSize="large"/>
-  // )
+
+const CartWidget = () => {
+    const ctx = useContext(CartContext);
+
+    return (
+        <p className="cart">🛒{ctx.calcItemsQty()}</p>
+    )
 }
 
-export default CartWidget
+export default CartWidget;

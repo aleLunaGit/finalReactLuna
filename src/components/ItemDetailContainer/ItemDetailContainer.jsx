@@ -1,50 +1,21 @@
 import { useEffect, useState } from "react";
-import { Button, Card } from "react-bootstrap";
-import { Link, useParams } from "react-router-dom";
-import { gFetch } from "../../utils/gFetch";
+import { useParams } from "react-router-dom";
+import { firestoreFetchItem } from "../../firebase/FirebaseFetch";
+import ItemDetail from "../ItemDetail/ItemDetail";
 
 export const ItemDetailContainer = () => {
-    const [productos, setProductos] = useState([]);
-    const [loading, setLoading] = useState(true);
-  
-    const { idProducto } = useParams();
-  
-    useEffect(() => {
-      if(idProducto) {
-      gFetch()
-      .then(res => {      
-        setProductos(res.find(producto => producto.id === idProducto))
-      })
-      .catch(error => console.log(error))
-      .finally(()=> setLoading(false))      
-  } else {
-    gFetch()
-      .then(res => {      
-        setProductos(res)
-      })
-      .catch(error => console.log(error))
-      .finally(()=> setLoading(false))
-    
-  }
-  }, [idProducto]);
-  
-  console.log(productos)
-  
-    return loading ?
+  const [productos, setProductos] = useState([]);
 
-    <h2>RECOPILANDO</h2>
-    :
+  const { idProducto } = useParams();
 
-    (
-        <Card style={{ width: '18rem' }}>
-        <Card.Img variant="top" src={productos.foto} />
-        <Card.Body>
-          <Card.Title>{productos.nombre}</Card.Title>
-          <Card.Text>
-          DESCRIPCION DEL PRODUCTO
-          </Card.Text>
-          <Button variant="primary">COMPRAR</Button>
-        </Card.Body>
-      </Card>
-    )
-  };
+  useEffect(() => {
+    firestoreFetchItem(idProducto)
+      .then(result => setProductos(result))
+      .catch(err => console.log(err))
+
+  }, []);
+
+  return (
+    <ItemDetail item={productos} />
+  )
+};
